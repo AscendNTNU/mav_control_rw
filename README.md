@@ -73,7 +73,7 @@ To run the controller with RotorS simulator (https://github.com/ethz-asl/rotors_
   $ git clone https://github.com/ethz-asl/mav_comm.git
   $ git clone https://github.com/ethz-asl/eigen_catkin.git
 
-  $ git clone https://github.com/ethz-asl/mav_control_rw.git
+  $ git clone https://github.com/AscendNTNU/mav_control_rw.git
 ```
 * Build the workspace  
 ```sh
