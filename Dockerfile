@@ -7,6 +7,7 @@ RUN apt-get update -qq && apt-get install -yqq build-essential && apt-get instal
 liblapacke-dev \
 ros-melodic-joy \
 ros-melodic-octomap-ros \
+ros-melodic-gazebo-pkgs \
 ros-melodic-gazebo-plugins \
 ros-melodic-tf-conversions \
 libgoogle-glog-dev \
