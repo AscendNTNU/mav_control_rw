@@ -8,7 +8,6 @@ liblapacke-dev \
 ros-melodic-joy \
 ros-melodic-octomap-ros \
 ros-melodic-gazebo-plugins \
-ros-melodic-gazebo-ros-pkgs \
 ros-melodic-tf-conversions \
 libgoogle-glog-dev \
 cmake \
