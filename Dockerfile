@@ -3,7 +3,10 @@ MAINTAINER Ascend NTNU "www.ascendntnu.no"
 
 ENV ROS_WORKSPACE_PATH=/root/catkin_workspace
 ENV ROS_PACKAGE_NAME=mav_control_rw
-RUN apt-get update -qq && apt-get install -yqq build-essential && apt-get -yqq install liblapacke-dev 
+RUN apt-get update -qq && apt-get install -yqq build-essential && apt-get install -yqq \
+liblapacke-dev \
+ros-melodic-joy \
+ros-melodic-octomap-ros
 
 RUN mkdir -p $ROS_WORKSPACE_PATH/src
 RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_init_workspace $ROS_WORKSPACE_PATH/src'
