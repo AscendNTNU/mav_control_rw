@@ -22,6 +22,7 @@
 #include <mav_msgs/conversions.h>
 #include <mav_msgs/eigen_mav_msgs.h>
 #include <deque>
+#include <math.h>
 #include <chrono>
 #include <thread>
 #include <mutex>
@@ -69,6 +70,7 @@ class MPCQueue
   const int maximum_queue_size_;
   int current_queue_size_;
   bool initialized_;
+  bool position_verified;
 
   double prediction_sampling_time_;
   double queue_dt_;
@@ -94,8 +96,11 @@ class MPCQueue
 
   void printQueue();
 
+  ros::Subscriber verified_position_close;
+  void positionCb(nav_msgs::Odometry position);
   ros::Publisher trajectory_reference_vis_publisher_;
   void publishQueueMarker(const ros::TimerEvent&);
+
   ros::Timer publish_queue_marker_timer_;
   std::string reference_frame_id_;
 };

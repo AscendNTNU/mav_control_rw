@@ -26,11 +26,13 @@ MPCQueue::MPCQueue(const ros::NodeHandle& nh, const ros::NodeHandle& private_nh,
       maximum_queue_size_(10000),
       current_queue_size_(0),
       initialized_(false),
+      position_verified(false),
       prediction_sampling_time_(0.01),
       queue_dt_(0.01),
       queue_start_time_(0.0)
 {
   trajectory_reference_vis_publisher_ = nh_.advertise<visualization_msgs::Marker>( "reference_trajectory", 0 );
+  verified_position_close = nh_.subscribe("/control/position_close", 1, &MPCQueue::positionCb, this);
   //publish at 10 hz
   publish_queue_marker_timer_ = nh_.createTimer(ros::Duration(0.1), &MPCQueue::publishQueueMarker, this);
   private_nh_.param<std::string>("reference_frame", reference_frame_id_, "odom");
@@ -238,9 +240,21 @@ void MPCQueue::getLastPoint(mav_msgs::EigenTrajectoryPoint* point)
   }
 }
 
+// Compares distance between current position and current reference
+void MPCQueue::positionCb(nav_msgs::Odometry position) {
+  Eigen::Vector3d current_reference = position_reference_.front();
+  float distance = sqrt(
+    pow((position.pose.pose.position.x - current_reference(0)), 2) + 
+    pow((position.pose.pose.position.y - current_reference(1)), 2) + 
+    pow((position.pose.pose.position.z - current_reference(2)), 2));
+  if (distance < 1) {
+    position_verified = true;
+  }
+}
+
 void MPCQueue::updateQueue()
 {
-  if (initialized_) {
+  if (initialized_ && position_verified) {
     popFrontPoint();
 
     mav_msgs::EigenTrajectoryPoint point;
