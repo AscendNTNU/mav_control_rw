@@ -6,7 +6,7 @@ ENV ROS_PACKAGE_NAME=mav_control_rw
 RUN apt-get update -qq && apt-get install -yqq build-essential && apt-get -yqq install liblapacke-dev 
 
 RUN mkdir -p $ROS_WORKSPACE_PATH/src
-RUN /bin/bash -c '. /opt/ros/kinetic/setup.bash; catkin_init_workspace $ROS_WORKSPACE_PATH/src'
+RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_init_workspace $ROS_WORKSPACE_PATH/src'
 
 # Run caktin_make once without building any packages to create the setup.bash
 # RUN /bin/bash -c '. /opt/ros/kinetic/setup.bash; cd $ROS_WORKSPACE_PATH; catkin_make'
