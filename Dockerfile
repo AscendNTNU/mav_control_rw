@@ -7,6 +7,8 @@ RUN apt-get update -qq && apt-get install -yqq build-essential && apt-get instal
 liblapacke-dev \
 ros-melodic-joy \
 ros-melodic-octomap-ros \
+ros-melodic-gazebo-plugins \
+cmake \
 libeigen3-dev
 
 RUN mkdir -p $ROS_WORKSPACE_PATH/src
