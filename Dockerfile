@@ -21,6 +21,7 @@ RUN /bin/bash -c '. /opt/ros/melodic/setup.bash; catkin_init_workspace $ROS_WORK
 # RUN /bin/bash -c '. /opt/ros/kinetic/setup.bash; cd $ROS_WORKSPACE_PATH; catkin_make'
 
 COPY ./ $ROS_WORKSPACE_PATH/src/$ROS_PACKAGE_NAME/
+COPY ros_entrypoint.sh /
 WORKDIR $ROS_WORKSPACE_PATH/src
 RUN git clone https://github.com/catkin/catkin_simple.git
 RUN git clone https://github.com/ethz-asl/rotors_simulator.git
