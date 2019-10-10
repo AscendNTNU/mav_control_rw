@@ -32,7 +32,7 @@ MPCQueue::MPCQueue(const ros::NodeHandle& nh, const ros::NodeHandle& private_nh,
       queue_start_time_(0.0)
 {
   trajectory_reference_vis_publisher_ = nh_.advertise<visualization_msgs::Marker>( "reference_trajectory", 0 );
-  verified_position_close = nh_.subscribe("/odometry/filtered", &MPCQueue::positionCb, this);
+  verified_position_close = nh_.subscribe("/odometry/filtered", 1, &MPCQueue::positionCb, this);
   //publish at 10 hz
   publish_queue_marker_timer_ = nh_.createTimer(ros::Duration(0.1), &MPCQueue::publishQueueMarker, this);
   private_nh_.param<std::string>("reference_frame", reference_frame_id_, "odom");
