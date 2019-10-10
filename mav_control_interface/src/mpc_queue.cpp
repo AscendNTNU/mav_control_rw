@@ -247,7 +247,7 @@ void MPCQueue::positionCb(nav_msgs::Odometry position) {
     pow((position.pose.pose.position.x - current_reference(0)), 2) + 
     pow((position.pose.pose.position.y - current_reference(1)), 2) + 
     pow((position.pose.pose.position.z - current_reference(2)), 2));
-  if (distance < 1) {
+  if (distance < 1.0) {
     position_verified = true;
   }
 }
