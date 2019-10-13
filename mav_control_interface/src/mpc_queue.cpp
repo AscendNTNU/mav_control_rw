@@ -250,6 +250,9 @@ void MPCQueue::positionCb(nav_msgs::Odometry position) {
   if (distance < 1.0) {
     position_verified = true;
   }
+  else {
+    position_verified = false;
+  }
 }
 
 void MPCQueue::updateQueue()
