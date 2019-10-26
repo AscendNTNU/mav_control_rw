@@ -29,7 +29,8 @@ MPCQueue::MPCQueue(const ros::NodeHandle& nh, const ros::NodeHandle& private_nh,
       position_verified(false),
       prediction_sampling_time_(0.01),
       queue_dt_(0.01),
-      queue_start_time_(0.0)
+      queue_start_time_(0.0),
+      verify_distance(10.0)
 {
   trajectory_reference_vis_publisher_ = nh_.advertise<visualization_msgs::Marker>( "reference_trajectory", 0 );
   verified_position_close = nh_.subscribe("/odometry/filtered", 1, &MPCQueue::positionCb, this);
@@ -242,12 +243,29 @@ void MPCQueue::getLastPoint(mav_msgs::EigenTrajectoryPoint* point)
 
 // Compares distance between current position and current reference
 void MPCQueue::positionCb(nav_msgs::Odometry position) {
-  Eigen::Vector3d current_reference = position_reference_.front();
+  last_position = position;
+  verifyPosition();
+  /*Eigen::Vector3d current_reference = position_reference_.front();
   float distance = sqrt(
     pow((position.pose.pose.position.x - current_reference(0)), 2) + 
     pow((position.pose.pose.position.y - current_reference(1)), 2) + 
     pow((position.pose.pose.position.z - current_reference(2)), 2));
-  if (distance < 1.0) {
+  if (distance < 8) {
+    position_verified = true;
+  }
+  else {
+    position_verified = false;
+  }*/
+}
+
+void MPCQueue::verifyPosition() {
+  Eigen::Vector3d current_reference = position_reference_.front();
+  float distance = sqrt(
+    pow((last_position.pose.pose.position.x - current_reference(0)), 2) + 
+    pow((last_position.pose.pose.position.y - current_reference(1)), 2) + 
+    pow((last_position.pose.pose.position.z - current_reference(2)), 2));
+  if (distance < verify_distance) {
+    //ROS_FATAL("POSITION VERIFIED");
     position_verified = true;
   }
   else {
@@ -257,7 +275,31 @@ void MPCQueue::positionCb(nav_msgs::Odometry position) {
 
 void MPCQueue::updateQueue()
 {
-  if (initialized_ && position_verified) {
+  if (current_queue_size_ > minimum_queue_size_) {
+    if (verify_distance > 2.0) {
+      ROS_FATAL("CHANGED VERIFY DISTANCE");
+    }
+    verify_distance = 2.0;
+  }
+  while (initialized_ && position_verified && (current_queue_size_ >= minimum_queue_size_)) {
+  	popFrontPoint();
+  	/*mav_msgs::EigenTrajectoryPoint point;
+    getLastPoint(&point);
+
+    if (current_queue_size_ < minimum_queue_size_) {
+      pushBackPoint(point);
+    }*/
+    verifyPosition();
+  }
+  mav_msgs::EigenTrajectoryPoint point;
+  getLastPoint(&point);
+
+  while (current_queue_size_ < minimum_queue_size_) {
+  	//ROS_FATAL("PUSHING EMPTY POINT");
+    pushBackPoint(point);
+  }
+
+  /*if (initialized_ && position_verified) {
     popFrontPoint();
 
     mav_msgs::EigenTrajectoryPoint point;
@@ -265,7 +307,7 @@ void MPCQueue::updateQueue()
 
     while (current_queue_size_ < minimum_queue_size_)
       pushBackPoint(point);
-  }
+  }*/
 }
 
 void MPCQueue::publishQueueMarker(const ros::TimerEvent&)

@@ -90,6 +90,11 @@ class MPCQueue
   void getLastPoint(mav_msgs::EigenTrajectoryPoint* point);
   void shrinkQueueToMinimum();
 
+  //EDVARD
+  void verifyPosition();
+  nav_msgs::Odometry last_position;
+  double verify_distance;
+
   //interpolate the reference queue to the controller update rate
   void linearInterpolateTrajectory(const mav_msgs::EigenTrajectoryPointDeque& input_queue,  mav_msgs::EigenTrajectoryPointDeque& output_queue);
 
